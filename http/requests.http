@@ -1,0 +1,68 @@
+
+@host = http://pet-gallery-api.us-east-2.elasticbeanstalk.com
+@path = /api/pet
+@url = {{host}}{{path}}
+
+
+GET {{url}} HTTP/1.1
+
+### 200
+
+GET {{url}}/1 HTTP/1.1
+
+### 201
+
+POST {{url}} HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Smoke",
+  "imageUrl": "https://static.independent.co.uk/2021/04/22/13/newFile-6.jpg"
+}
+
+### 204 - updated
+
+PUT {{url}}/1 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "petId": 1,
+  "name": "Smokey",
+  "imageUrl": "https://static.independent.co.uk/2021/04/22/13/newFile-6.jpg"
+}
+
+### 404
+
+PUT {{url}}/99 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "petId": 99,
+  "name": "Smokey",
+  "imageUrl": "https://static.independent.co.uk/2021/04/22/13/newFile-6.jpg"
+}
+
+### 409 - id mismatch
+
+PUT {{url}}/1 HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "petId": 99,
+  "name": "Smokey",
+  "imageUrl": "https://static.independent.co.uk/2021/04/22/13/newFile-6.jpg"
+}
+
+### 204 - deleted
+
+DELETE {{url}}/7 HTTP/1.1
+
+### 404 - not found
+
+DELETE {{url}}/99 HTTP/1.1
+
+

@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+  build:
+    commands:
+      - echo Build started on `date`
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - mvn package
+artifacts:
+  files:
+    - target/pet-gallery-1.0-SNAPSHOT.jar
+  discard-paths: yes

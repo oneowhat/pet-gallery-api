@@ -1,6 +1,6 @@
 package learn.petgallery.domain;
 
-import learn.petgallery.data.PetRepository;
+import learn.petgallery.data.JpaPetRepository;
 import learn.petgallery.models.Pet;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 class PetServiceTest {
 
     @MockBean
-    PetRepository petRepository;
+    JpaPetRepository jpaPetRepository;
 
     @Autowired
     PetService petService;
@@ -30,7 +30,7 @@ class PetServiceTest {
                 new Pet(3, "Magpie", "https://example.com/image-3")
         );
 
-        when(petRepository.findAll()).thenReturn(pets);
+        when(jpaPetRepository.findAll()).thenReturn(pets);
 
         List<Pet> actual = petService.findAll();
 
@@ -41,7 +41,7 @@ class PetServiceTest {
     void shouldFindFluffyById() {
         Pet fluffy = new Pet(1, "Fluffy", "https://example.com/image-1");
 
-        when(petRepository.findById(1)).thenReturn(Optional.of(fluffy));
+        when(jpaPetRepository.findById(1)).thenReturn(Optional.of(fluffy));
 
         Pet actual = petService.findById(1);
 
@@ -53,7 +53,7 @@ class PetServiceTest {
         Pet petToAdd = new Pet(0, "Atilla", "https://example.com/image-4");
         Pet petAdded = new Pet(4, "Atilla", "https://example.com/image-4");
 
-        when(petRepository.save(petToAdd)).thenReturn(petAdded);
+        when(jpaPetRepository.save(petToAdd)).thenReturn(petAdded);
 
         Result<Pet> result = petService.add(petToAdd);
 
@@ -120,7 +120,7 @@ class PetServiceTest {
     void shouldUpdateValidPet() {
         Pet petToUpdate = new Pet(4, "New name", "https://localhost:3000/image.png");
 
-        when(petRepository.findById(4)).thenReturn(Optional.of(petToUpdate));
+        when(jpaPetRepository.findById(4)).thenReturn(Optional.of(petToUpdate));
 
         Result<Void> result = petService.update(petToUpdate);
 
@@ -131,7 +131,7 @@ class PetServiceTest {
     void shouldNotUpdateNotExistingPet() {
         Pet petToUpdate = new Pet(4, "New name", "https://localhost:3000/image.png");
 
-        when(petRepository.findById(4)).thenReturn(Optional.empty());
+        when(jpaPetRepository.findById(4)).thenReturn(Optional.empty());
 
         Result<Void> result = petService.update(petToUpdate);
 
@@ -145,7 +145,7 @@ class PetServiceTest {
 
         Pet petToDelete = new Pet(4, "New name", "https://localhost:3000/image.png");
 
-        when(petRepository.findById(4)).thenReturn(Optional.of(petToDelete));
+        when(jpaPetRepository.findById(4)).thenReturn(Optional.of(petToDelete));
 
         Result<Void> result = petService.deleteById(4);
 
@@ -154,7 +154,7 @@ class PetServiceTest {
 
     @Test
     void shouldNotDeleteNotExistingPet() {
-        when(petRepository.findById(4)).thenReturn(Optional.empty());
+        when(jpaPetRepository.findById(4)).thenReturn(Optional.empty());
 
         Result<Void> result = petService.deleteById(4);
 

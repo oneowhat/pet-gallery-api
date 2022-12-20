@@ -1,6 +1,6 @@
 package learn.petgallery.domain;
 
-import learn.petgallery.data.PetRepository;
+import learn.petgallery.data.JpaPetRepository;
 import learn.petgallery.models.Pet;
 import org.springframework.stereotype.Service;
 
@@ -11,20 +11,20 @@ import java.util.List;
 @Service
 public class PetService {
 
-    private final PetRepository petRepository;
+    private final JpaPetRepository jpaPetRepository;
     private final Validator validator;
 
-    public PetService(PetRepository petRepository, Validator validator) {
-        this.petRepository = petRepository;
+    public PetService(JpaPetRepository jpaPetRepository, Validator validator) {
+        this.jpaPetRepository = jpaPetRepository;
         this.validator = validator;
     }
 
     public List<Pet> findAll() {
-        return petRepository.findAll();
+        return jpaPetRepository.findAll();
     }
 
     public Pet findById(int petId) {
-        return petRepository.findById(petId).orElse(null);
+        return jpaPetRepository.findById(petId).orElse(null);
     }
 
     public Result<Pet> add(Pet pet) {
@@ -33,7 +33,7 @@ public class PetService {
             return result;
         }
 
-        pet = petRepository.save(pet);
+        pet = jpaPetRepository.save(pet);
         result.setPayload(pet);
         return result;
     }
@@ -44,7 +44,7 @@ public class PetService {
             return result;
         }
         if (findById(pet.getPetId()) != null) {
-            petRepository.save(pet);
+            jpaPetRepository.save(pet);
             return result;
         }
         result.addMessage(String.format("Pet id: '%s' not found.", pet.getPetId()), ResultType.NOT_FOUND);
@@ -54,7 +54,7 @@ public class PetService {
     public Result<Void> deleteById(int petId) {
         Result<Void> result = new Result<>();
         if (findById(petId) != null) {
-            petRepository.deleteById(petId);
+            jpaPetRepository.deleteById(petId);
             return result;
         }
         result.addMessage(String.format("Pet id: '%s' not found.", petId), ResultType.NOT_FOUND);

@@ -1,7 +1,7 @@
 package learn.petgallery.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import learn.petgallery.data.PetRepository;
+import learn.petgallery.data.JpaPetRepository;
 import learn.petgallery.models.Pet;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +11,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -26,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PetControllerTest {
 
     @MockBean
-    PetRepository petRepository;
+    JpaPetRepository jpaPetRepository;
 
     @Autowired
     MockMvc mvc;
@@ -40,7 +38,7 @@ class PetControllerTest {
                 new Pet(3, "Magpie", "https://example.com/image-3.jpg")
         );
 
-        when(petRepository.findAll()).thenReturn(pets);
+        when(jpaPetRepository.findAll()).thenReturn(pets);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String expectedJson = objectMapper.writeValueAsString(pets);
@@ -55,7 +53,7 @@ class PetControllerTest {
 
         Pet pet = new Pet(3, "Fluffy", "https://example.com/image-1.png");
 
-        when(petRepository.findById(3)).thenReturn(Optional.of(pet));
+        when(jpaPetRepository.findById(3)).thenReturn(Optional.of(pet));
 
         ObjectMapper objectMapper = new ObjectMapper();
         String expectedJson = objectMapper.writeValueAsString(pet);
@@ -76,7 +74,7 @@ class PetControllerTest {
         Pet pet = new Pet(0, "Fritzy", "https://example.com/image-33.png");
         Pet createdPet = new Pet(4, "Fritzy", "https://example.com/image-33.png");
 
-        when(petRepository.save(pet)).thenReturn(createdPet);
+        when(jpaPetRepository.save(pet)).thenReturn(createdPet);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonIn = objectMapper.writeValueAsString(pet);
@@ -115,7 +113,7 @@ class PetControllerTest {
     void shouldUpdateValidPetAndReturnHttp204() throws Exception {
         Pet pet = new Pet(4, "Fritzy", "https://example.com/image-33.png");
 
-        when(petRepository.findById(4)).thenReturn(Optional.of(pet));
+        when(jpaPetRepository.findById(4)).thenReturn(Optional.of(pet));
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonIn = objectMapper.writeValueAsString(pet);
@@ -179,7 +177,7 @@ class PetControllerTest {
 
     @Test
     void shouldDeletePetAndReturnHttp204() throws Exception {
-        when(petRepository.findById(4)).thenReturn(Optional.of(new Pet()));
+        when(jpaPetRepository.findById(4)).thenReturn(Optional.of(new Pet()));
 
         var request = delete("/api/pet/4");
 

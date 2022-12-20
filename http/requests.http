@@ -1,5 +1,5 @@
 
-@host = http://pet-gallery-api.us-east-2.elasticbeanstalk.com
+@host = http://localhost:8080
 @path = /api/pet
 @url = {{host}}{{path}}
 

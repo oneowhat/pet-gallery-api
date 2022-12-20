@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface JpaPetRepository extends JpaRepository<Pet, Integer> {
+    Pet save(Pet pet, int appUserId);
+
+    void deleteById(int petId, int appUserId);
 }

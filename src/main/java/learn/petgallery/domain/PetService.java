@@ -1,7 +1,6 @@
 package learn.petgallery.domain;
 
 import learn.petgallery.data.JpaPetRepository;
-import learn.petgallery.data.PetRepository;
 import learn.petgallery.models.Pet;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +11,10 @@ import java.util.List;
 @Service
 public class PetService {
 
-    private final PetRepository petRepository;
+    private final JpaPetRepository petRepository;
     private final Validator validator;
 
-    public PetService(PetRepository petRepository, Validator validator) {
+    public PetService(JpaPetRepository petRepository, Validator validator) {
         this.petRepository = petRepository;
         this.validator = validator;
     }
@@ -25,7 +24,7 @@ public class PetService {
     }
 
     public Pet findById(int petId) {
-        return petRepository.findById(petId);
+        return petRepository.findById(petId).orElse(null);
     }
 
     public Result<Pet> add(Pet pet, int appUserId) {

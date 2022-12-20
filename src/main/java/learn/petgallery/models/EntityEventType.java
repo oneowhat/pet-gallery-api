@@ -1,6 +1,7 @@
 package learn.petgallery.models;
 
 public enum EntityEventType {
-    SAVE,
+    ADD,
+    UPDATE,
     DELETE
 }

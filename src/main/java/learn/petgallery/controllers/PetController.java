@@ -3,9 +3,11 @@ package learn.petgallery.controllers;
 import learn.petgallery.domain.PetService;
 import learn.petgallery.domain.Result;
 import learn.petgallery.domain.ResultType;
+import learn.petgallery.models.AppUser;
 import learn.petgallery.models.Pet;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,11 +40,13 @@ public class PetController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> add(@RequestBody @Valid Pet pet, BindingResult bindingResult) {
+    public ResponseEntity<Object> add(@RequestBody @Valid Pet pet,
+                                      BindingResult bindingResult,
+                                      @AuthenticationPrincipal AppUser appUser) {
         if (bindingResult.hasErrors()) {
             return buildInvalidResponse(bindingResult);
         }
-        Result<Pet> result = petService.add(pet);
+        Result<Pet> result = petService.add(pet, appUser.getAppUserId());
         if (result.isSuccess()) {
             return new ResponseEntity<>(result.getPayload(), HttpStatus.CREATED);
         }
@@ -52,14 +56,15 @@ public class PetController {
     @PutMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable int id,
                                          @RequestBody @Valid Pet pet,
-                                         BindingResult bindingResult) {
+                                         BindingResult bindingResult,
+                                         @AuthenticationPrincipal AppUser appUser) {
         if (bindingResult.hasErrors()) {
             return buildInvalidResponse(bindingResult);
         }
         if (id != pet.getPetId()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        Result<Void> result = petService.update(pet);
+        Result<Void> result = petService.update(pet, appUser.getAppUserId());
         if (result.isSuccess()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else if (result.getResultType() == ResultType.NOT_FOUND) {
@@ -69,8 +74,9 @@ public class PetController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteById(@PathVariable int id) {
-        Result<Void> result = petService.deleteById(id);
+    public ResponseEntity<Object> deleteById(@PathVariable int id,
+                                             @AuthenticationPrincipal AppUser appUser) {
+        Result<Void> result = petService.deleteById(id, appUser.getAppUserId());
         if (result.isSuccess()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

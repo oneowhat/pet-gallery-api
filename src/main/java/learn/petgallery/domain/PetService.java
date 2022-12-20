@@ -1,6 +1,7 @@
 package learn.petgallery.domain;
 
 import learn.petgallery.data.JpaPetRepository;
+import learn.petgallery.data.PetRepository;
 import learn.petgallery.models.Pet;
 import org.springframework.stereotype.Service;
 
@@ -11,50 +12,50 @@ import java.util.List;
 @Service
 public class PetService {
 
-    private final JpaPetRepository jpaPetRepository;
+    private final PetRepository petRepository;
     private final Validator validator;
 
-    public PetService(JpaPetRepository jpaPetRepository, Validator validator) {
-        this.jpaPetRepository = jpaPetRepository;
+    public PetService(PetRepository petRepository, Validator validator) {
+        this.petRepository = petRepository;
         this.validator = validator;
     }
 
     public List<Pet> findAll() {
-        return jpaPetRepository.findAll();
+        return petRepository.findAll();
     }
 
     public Pet findById(int petId) {
-        return jpaPetRepository.findById(petId).orElse(null);
+        return petRepository.findById(petId);
     }
 
-    public Result<Pet> add(Pet pet) {
+    public Result<Pet> add(Pet pet, int appUserId) {
         Result<Pet> result = validate(pet);
         if (!result.isSuccess()) {
             return result;
         }
 
-        pet = jpaPetRepository.save(pet);
+        pet = petRepository.save(pet, appUserId);
         result.setPayload(pet);
         return result;
     }
 
-    public Result<Void> update(Pet pet) {
+    public Result<Void> update(Pet pet, int appUserId) {
         Result<Void> result = validate(pet);
         if (!result.isSuccess()) {
             return result;
         }
         if (findById(pet.getPetId()) != null) {
-            jpaPetRepository.save(pet);
+            petRepository.save(pet, appUserId);
             return result;
         }
         result.addMessage(String.format("Pet id: '%s' not found.", pet.getPetId()), ResultType.NOT_FOUND);
         return result;
     }
 
-    public Result<Void> deleteById(int petId) {
+    public Result<Void> deleteById(int petId, int appUserId) {
         Result<Void> result = new Result<>();
         if (findById(petId) != null) {
-            jpaPetRepository.deleteById(petId);
+            petRepository.deleteById(petId, appUserId);
             return result;
         }
         result.addMessage(String.format("Pet id: '%s' not found.", petId), ResultType.NOT_FOUND);

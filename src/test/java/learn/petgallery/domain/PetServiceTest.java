@@ -55,7 +55,7 @@ class PetServiceTest {
 
         when(jpaPetRepository.save(petToAdd)).thenReturn(petAdded);
 
-        Result<Pet> result = petService.add(petToAdd);
+        Result<Pet> result = petService.add(petToAdd, 1);
 
         assertTrue(result.isSuccess());
         assertEquals(petAdded, result.getPayload());
@@ -65,7 +65,7 @@ class PetServiceTest {
     void shouldNotAddPetWithBlankName() {
         Pet petToAdd = new Pet(0, " ", "https://example.com/image-4");
 
-        Result<Pet> result = petService.add(petToAdd);
+        Result<Pet> result = petService.add(petToAdd, 1);
 
         assertFalse(result.isSuccess());
         assertEquals(1, result.getMessages().size());
@@ -76,7 +76,7 @@ class PetServiceTest {
     void shouldNotAddPetWithNullName() {
         Pet petToAdd = new Pet(0, null, "https://example.com/image-4");
 
-        Result<Pet> result = petService.add(petToAdd);
+        Result<Pet> result = petService.add(petToAdd, 1);
 
         assertFalse(result.isSuccess());
         assertEquals(1, result.getMessages().size());
@@ -87,7 +87,7 @@ class PetServiceTest {
     void shouldNotAddPetWithBlankUrl() {
         Pet petToAdd = new Pet(0, "Atilla", " ");
 
-        Result<Pet> result = petService.add(petToAdd);
+        Result<Pet> result = petService.add(petToAdd, 1);
 
         assertFalse(result.isSuccess());
         assertEquals(1, result.getMessages().size());
@@ -98,7 +98,7 @@ class PetServiceTest {
     void shouldNotAddPetWithNullUrl() {
         Pet petToAdd = new Pet(0, "Atilla", null);
 
-        Result<Pet> result = petService.add(petToAdd);
+        Result<Pet> result = petService.add(petToAdd, 1);
 
         assertFalse(result.isSuccess());
         assertEquals(1, result.getMessages().size());
@@ -109,7 +109,7 @@ class PetServiceTest {
     void shouldNotAddPetWithMalformedUrl() {
         Pet petToAdd = new Pet(0, "Atilla", "this.isnot.a-valid url");
 
-        Result<Pet> result = petService.add(petToAdd);
+        Result<Pet> result = petService.add(petToAdd, 1);
 
         assertFalse(result.isSuccess());
         assertEquals(1, result.getMessages().size());
@@ -122,7 +122,7 @@ class PetServiceTest {
 
         when(jpaPetRepository.findById(4)).thenReturn(Optional.of(petToUpdate));
 
-        Result<Void> result = petService.update(petToUpdate);
+        Result<Void> result = petService.update(petToUpdate, 1);
 
         assertTrue(result.isSuccess());
     }
@@ -133,7 +133,7 @@ class PetServiceTest {
 
         when(jpaPetRepository.findById(4)).thenReturn(Optional.empty());
 
-        Result<Void> result = petService.update(petToUpdate);
+        Result<Void> result = petService.update(petToUpdate, 1);
 
         assertFalse(result.isSuccess());
         assertEquals(1, result.getMessages().size());
@@ -147,7 +147,7 @@ class PetServiceTest {
 
         when(jpaPetRepository.findById(4)).thenReturn(Optional.of(petToDelete));
 
-        Result<Void> result = petService.deleteById(4);
+        Result<Void> result = petService.deleteById(4, 1);
 
         assertTrue(result.isSuccess());
     }
@@ -156,7 +156,7 @@ class PetServiceTest {
     void shouldNotDeleteNotExistingPet() {
         when(jpaPetRepository.findById(4)).thenReturn(Optional.empty());
 
-        Result<Void> result = petService.deleteById(4);
+        Result<Void> result = petService.deleteById(4, 1);
 
         assertFalse(result.isSuccess());
         assertEquals(1, result.getMessages().size());

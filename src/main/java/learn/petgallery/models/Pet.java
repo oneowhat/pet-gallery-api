@@ -15,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Pet {
+public class Pet implements AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +27,9 @@ public class Pet {
     @URL(message = "Pet image URL must be a URL.")
     @NotBlank(message = "Pet image URL is required.")
     private String imageUrl;
+
+    @Override
+    public int getId() {
+        return petId;
+    }
 }

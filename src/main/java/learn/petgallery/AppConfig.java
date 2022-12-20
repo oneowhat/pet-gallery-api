@@ -1,12 +1,15 @@
 package learn.petgallery;
 
+import learn.petgallery.data.BaseJpaRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@EnableJpaRepositories(repositoryBaseClass = BaseJpaRepository.class)
 public class AppConfig {
     private final String[] allowedOrigins;
 

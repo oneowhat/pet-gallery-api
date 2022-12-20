@@ -38,11 +38,12 @@ public class PetController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> add(@RequestBody @Valid Pet pet, BindingResult bindingResult) {
+    public ResponseEntity<Object> add(@RequestBody @Valid Pet pet,
+                                      BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return buildInvalidResponse(bindingResult);
         }
-        Result<Pet> result = petService.add(pet);
+        Result<Pet> result = petService.add(pet, 1);
         if (result.isSuccess()) {
             return new ResponseEntity<>(result.getPayload(), HttpStatus.CREATED);
         }
@@ -59,7 +60,7 @@ public class PetController {
         if (id != pet.getPetId()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        Result<Void> result = petService.update(pet);
+        Result<Void> result = petService.update(pet, 1);
         if (result.isSuccess()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else if (result.getResultType() == ResultType.NOT_FOUND) {
@@ -70,7 +71,7 @@ public class PetController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteById(@PathVariable int id) {
-        Result<Void> result = petService.deleteById(id);
+        Result<Void> result = petService.deleteById(id, 1);
         if (result.isSuccess()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
